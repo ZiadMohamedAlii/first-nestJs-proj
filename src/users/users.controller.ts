@@ -14,6 +14,9 @@ import { CreateUserDto } from './dto/create-user-dto';
 import { UpdateUserDto } from './dto/update-user-dto';
 import { UsersService } from './users.service';
 
+import { UseInterceptors } from '@nestjs/common';
+import { SerializeInterceptor } from 'src/Interceptors/serialize. Interceptors';
+
 @Controller('auth')
 export class UsersController {
   constructor(private usersService: UsersService) {}
@@ -31,6 +34,7 @@ export class UsersController {
   }
 
   // get user by id
+  @UseInterceptors(SerializeInterceptor)
   @Get('/:id')
   async findOne(@Param('id') id: string) {
     const user = await this.usersService.findOne(parseInt(id));
