@@ -7,9 +7,19 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs';
 import { plainToInstance } from 'class-transformer';
-import { UserDto } from 'src/users/dto/user.dto';
+
+interface ClassConstructor {
+  new (...args: any[]): {};
+}
+
+export function Serialize(dto: ClassConstructor) {
+  // this function used as decorator in userController
+  return UseInterceptors(new SerializeInterceptor(dto));
+}
 
 export class SerializeInterceptor implements NestInterceptor {
+  constructor(private dto: any) {} //NOW we can use this serialization everywhere
+
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     // run before request
 
@@ -19,7 +29,7 @@ export class SerializeInterceptor implements NestInterceptor {
         // return data before the response
         // data is the real user entity
 
-        return plainToInstance(UserDto, data, {
+        return plainToInstance(this.dto, data, {
           excludeExtraneousValues: true,
         });
       }),
