@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
@@ -22,6 +26,9 @@ export class UsersService {
 
   //   findOne by id
   async findOne(id: number) {
+    if (!id) {
+      throw new UnauthorizedException('You must be signed in');
+    }
     return this.repo.findOneBy({ id });
   }
 
@@ -52,9 +59,4 @@ export class UsersService {
     }
     return this.repo.remove(user);
   }
-
-  //   find single record by email
-  // find(email: string) {
-  //   return this.repo.find({ where: { email } });
-  // }
 }

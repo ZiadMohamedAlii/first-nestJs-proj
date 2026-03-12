@@ -7,14 +7,14 @@ import {
   Query,
   Delete,
   Patch,
+  Session,
 } from '@nestjs/common';
 
-import { NotFoundException } from '@nestjs/common';
+import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user-dto';
 import { UpdateUserDto } from './dto/update-user-dto';
 import { UsersService } from './users.service';
 
-import { UseInterceptors } from '@nestjs/common';
 import { Serialize } from 'src/Interceptors/serialize.Interceptors';
 import { UserDto } from './dto/user.dto';
 import { AuthService } from './auth.service';
@@ -33,16 +33,36 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  //create user
+  //Signin -  create user
   @Post('/signup')
-  createUser(@Body() body: CreateUserDto) {
-    return this.authService.signUp(body.email, body.password);
+  async createUser(@Body() body: CreateUserDto, @Session() session: any) {
+    const user = await this.authService.signUp(body.email, body.password);
+    session.userId = user.id;
+    return user;
   }
 
   //sign in user
   @Post('/signin')
-  signin(@Body() body: CreateUserDto) {
-    return this.authService.signIn(body.email, body.password);
+  async signin(@Body() body: CreateUserDto, @Session() session: any) {
+    const user = await this.authService.signIn(body.email, body.password);
+    session.userId = user.id;
+    return user;
+  }
+
+  //
+
+  @Get('/whoami')
+  whoAmI(@Session() session: any) {
+    return this.usersService.findOne(session.userId);
+  }
+
+  //
+
+  @Post('signout')
+  signOut(@Session() session: any) {
+    if (!session.userId)
+      throw new UnauthorizedException('You must be signed in');
+    session.userId = null;
   }
 
   // get user by id
