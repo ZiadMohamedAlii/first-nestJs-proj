@@ -16,12 +16,12 @@ import { CreateUserDto } from './dto/create-user-dto';
 import { UpdateUserDto } from './dto/update-user-dto';
 import { UsersService } from './users.service';
 
-import { Serialize } from 'src/Interceptors/serialize.Interceptors';
+import { Serialize } from '../Interceptors/serialize.Interceptors';
 import { UserDto } from './dto/user.dto';
 import { AuthService } from './auth.service';
-import { CurrentUser } from 'src/decorators/current-user.decorator';
+import { CurrentUser } from '../decorators/current-user.decorator';
 
-import { AuthGuard } from 'src/guards/auth.guards';
+import { AuthGuard } from '../guards/auth.guards';
 
 @Serialize(UserDto)
 @Controller('auth')
@@ -30,6 +30,8 @@ export class UsersController {
     private usersService: UsersService,
     private authService: AuthService,
   ) {}
+
+  testFunction = (decorator: any, body: CreateUserDto, session: any) => {};
 
   //get All users
   @Get()
