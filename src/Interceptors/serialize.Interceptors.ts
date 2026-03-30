@@ -36,3 +36,7 @@ export class SerializeInterceptor implements NestInterceptor {
     );
   }
 }
+
+// so serialization here is the last step before sending
+// back data to user
+// globally used interceptor

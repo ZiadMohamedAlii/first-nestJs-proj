@@ -10,7 +10,7 @@ import { UsersModule } from './users/users.module';
 import { ReportsModule } from './reports/reports.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/user.entity';
-import { Reports } from './reports/reports.entity';
+import { Report } from './reports/reports.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config'; //For ENV
 import { APP_PIPE } from '@nestjs/core'; // validation pipe
 const cookieSession = require('cookie-session'); //cookie-session import
@@ -28,7 +28,7 @@ const cookieSession = require('cookie-session'); //cookie-session import
         return {
           type: 'sqlite',
           database: config.get<string>('DB_NAME'),
-          entities: [User, Reports],
+          entities: [User, Report],
           synchronize: true,
         };
       },
@@ -51,12 +51,13 @@ const cookieSession = require('cookie-session'); //cookie-session import
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
+    // apply cookie to all routes
     consumer
       .apply(
         cookieSession({
           keys: ['asdfasf'], // secret key
         }),
       )
-      .forRoutes('*'); // apply to all routes
+      .forRoutes('*');
   }
 }

@@ -31,8 +31,6 @@ export class UsersController {
     private authService: AuthService,
   ) {}
 
-  testFunction = (decorator: any, body: CreateUserDto, session: any) => {};
-
   //get All users
   @Get()
   findAllUsers() {
