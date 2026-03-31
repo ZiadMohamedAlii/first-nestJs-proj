@@ -2,6 +2,12 @@ import { Expose, Transform } from 'class-transformer';
 
 export class ReportDto {
   @Expose()
+  id: number;
+
+  @Expose()
+  approved: boolean;
+
+  @Expose()
   make: string;
 
   @Expose()
@@ -23,9 +29,11 @@ export class ReportDto {
   price: number;
 
   @Expose()
-  @Transform(({ obj }) => obj.user.id)
+  @Transform(({ obj }) => obj.user?.id)
   userId: number;
 }
 
 // this is going to be the last thing to be sent to
 // users by controller as report 'report entity'
+
+//################# RES #####################
