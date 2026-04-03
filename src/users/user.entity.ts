@@ -18,6 +18,9 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ default: true })
+  admin: boolean;
+
   @Column()
   email: string;
 
