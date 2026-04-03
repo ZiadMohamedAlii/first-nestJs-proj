@@ -4,10 +4,16 @@ import { Repository } from 'typeorm';
 import { CreateReportDto } from './dto/create-report.dto';
 import { Report } from './reports.entity';
 import { User } from 'src/users/user.entity';
+import { GetEstimateDto } from './dto/get-estimate.dto';
 
 @Injectable()
 export class ReportsService {
   constructor(@InjectRepository(Report) private repo: Repository<Report>) {}
+
+  // getallReports
+  getAll() {
+    return this.repo.find();
+  }
 
   //   create report
   create(reportDto: CreateReportDto, user: User) {
@@ -32,5 +38,16 @@ export class ReportsService {
 
     // save value in db
     return this.repo.save(report);
+  }
+
+  // get estimate
+  createEstimate(estimateDto: GetEstimateDto) {
+    return (
+      this.repo
+        .createQueryBuilder()
+        .select('*')
+        // .where('make =:make', { make: estimateDto.make })
+        .getRawMany()
+    );
   }
 }
